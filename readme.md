@@ -32,8 +32,7 @@ Run the container using the following to allow TCP port 80 (HTTP) and to mount `
 docker run \
   --restart unless-stopped \
   --name cache-steam \
-  -v /cache/steam/data:/data/cache \
-  -v /cache/steam/logs:/data/logs \
+  -v /cache/steam/data:/srv/cache \
   -p 192.168.1.10:80:80 \
   steamcache/generic:latest
 ```
@@ -48,8 +47,7 @@ You should then create a second data directory on the host and then run the cont
 docker run \
   --restart unless-stopped \
   --name cache-blizzard \
-  -v /cache/blizzard/data:/data/cache \
-  -v /cache/blizzard/logs:/data/logs \
+  -v /cache/blizzard/data:/srv/cache \
   -p 192.168.1.11:80:80 \
   steamcache/generic:latest
 ```
@@ -100,15 +98,19 @@ You can override these at run time by adding the following to your docker run co
 
 ## Monitoring
 
-Access logs are written to /data/logs. If you don't particularly care about keeping them, you don't need to mount an external volume into the container.
+Access logs are written to standard out which logs to the docker logs.
 
 You can tail them using:
 
 ```
-docker exec -it cache-steam tail -f /data/logs/access.log
+docker logs cache-steam --tail
 ```
 
-If you have mounted the volume externally then you can tail it on the host instead.
+You can follow them using:
+
+```
+docker logs cache-steam --follow
+```
 
 ## Advice to Publishers
 
